@@ -1,0 +1,30 @@
+[package]
+name = "cryptohopper"
+version = "0.1.0-alpha.1"
+edition = "2021"
+rust-version = "1.76"
+authors = ["Cryptohopper <info@cryptohopper.com>"]
+description = "Official Rust SDK for the Cryptohopper API. Async, typed errors, stdlib-on-top-of-reqwest transport, full coverage of all 18 public API domains."
+license = "MIT"
+repository = "https://github.com/cryptohopper/cryptohopper-rust-sdk"
+homepage = "https://www.cryptohopper.com"
+documentation = "https://docs.rs/cryptohopper"
+readme = "README.md"
+keywords = ["cryptohopper", "trading", "crypto", "api", "sdk"]
+categories = ["api-bindings", "web-programming::http-client"]
+
+[dependencies]
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "json", "http2"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+tokio = { version = "1", default-features = false, features = ["time"] }
+httpdate = "1"
+
+[dev-dependencies]
+wiremock = "0.6"
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "time"] }
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
