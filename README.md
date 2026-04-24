@@ -1,7 +1,10 @@
 # cryptohopper
 
-[![Crates.io](https://img.shields.io/crates/v/cryptohopper.svg)](https://crates.io/crates/cryptohopper)
-[![docs.rs](https://docs.rs/cryptohopper/badge.svg)](https://docs.rs/cryptohopper)
+[![Crates.io](https://img.shields.io/crates/v/cryptohopper?logo=rust&include_prereleases)](https://crates.io/crates/cryptohopper)
+[![docs.rs](https://img.shields.io/docsrs/cryptohopper?logo=docsdotrs&label=docs.rs)](https://docs.rs/cryptohopper)
+[![Crates.io downloads](https://img.shields.io/crates/d/cryptohopper?logo=rust&label=downloads)](https://crates.io/crates/cryptohopper)
+[![CI](https://github.com/cryptohopper/cryptohopper-rust-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/cryptohopper/cryptohopper-rust-sdk/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/crates/l/cryptohopper?color=blue)](LICENSE)
 
 Official Rust SDK for the [Cryptohopper](https://www.cryptohopper.com) API.
 
