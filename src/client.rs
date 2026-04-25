@@ -176,6 +176,7 @@ impl ClientBuilder {
             base_url,
             user_agent,
             max_retries: self.max_retries.unwrap_or(DEFAULT_MAX_RETRIES),
+            timeout,
             http,
         });
 
@@ -211,6 +212,11 @@ pub(crate) struct Transport {
     base_url: String,
     user_agent: String,
     max_retries: u32,
+    // Per-request total deadline. reqwest's `Client::timeout` covers the
+    // connect + initial-response phase; the response body stream that
+    // backs `resp.text()` is *not* covered. We re-apply the same total
+    // timeout to the body read so a slow/stalled body can't hang the call.
+    timeout: Duration,
     http: reqwest::Client,
 }
 
@@ -301,10 +307,21 @@ impl Transport {
             .and_then(|v| v.to_str().ok())
             .and_then(parse_retry_after);
 
-        let text = resp
-            .text()
-            .await
-            .map_err(|e| Error::network(format!("failed to read body: {e}")))?;
+        // Bound the body read by the configured per-request timeout —
+        // reqwest's Client::timeout doesn't cover the body stream once
+        // .send() has resolved, so a slow body would otherwise hang.
+        let text = match tokio::time::timeout(self.timeout, resp.text()).await {
+            Ok(Ok(t)) => t,
+            Ok(Err(e)) => {
+                return Err(Error::network(format!("failed to read body: {e}")))
+            }
+            Err(_) => {
+                return Err(Error::timeout(format!(
+                    "response body read timed out after {}s",
+                    self.timeout.as_secs()
+                )))
+            }
+        };
         let parsed: Option<Value> = if text.is_empty() {
             None
         } else {
