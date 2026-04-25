@@ -312,9 +312,7 @@ impl Transport {
         // .send() has resolved, so a slow body would otherwise hang.
         let text = match tokio::time::timeout(self.timeout, resp.text()).await {
             Ok(Ok(t)) => t,
-            Ok(Err(e)) => {
-                return Err(Error::network(format!("failed to read body: {e}")))
-            }
+            Ok(Err(e)) => return Err(Error::network(format!("failed to read body: {e}"))),
             Err(_) => {
                 return Err(Error::timeout(format!(
                     "response body read timed out after {}s",
