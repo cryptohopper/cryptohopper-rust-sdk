@@ -274,8 +274,11 @@ impl Transport {
             builder = builder.query(q);
         }
 
+        // Cryptohopper Public API v1 uses `access-token: <token>`, not the
+        // OAuth2-conventional `Authorization: Bearer <token>`. The gateway
+        // in front of the API rejects Bearer with a SigV4 parse error.
         builder = builder
-            .header(header::AUTHORIZATION, format!("Bearer {}", self.api_key))
+            .header("access-token", self.api_key.as_str())
             .header(header::ACCEPT, "application/json")
             .header(header::USER_AGENT, &self.user_agent);
 
