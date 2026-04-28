@@ -15,11 +15,11 @@ fn build(server: &MockServer) -> Client {
 }
 
 #[tokio::test]
-async fn sends_bearer_user_agent_and_unwraps_data() {
+async fn sends_access_token_user_agent_and_unwraps_data() {
     let server = MockServer::start().await;
     Mock::given(method("GET"))
         .and(path("/user/get"))
-        .and(header("Authorization", "Bearer ch_test"))
+        .and(header("access-token", "ch_test"))
         .and(header("Accept", "application/json"))
         .and(header_exists("User-Agent"))
         .respond_with(ResponseTemplate::new(200).set_body_json(json!({"data": {"hello": "world"}})))
