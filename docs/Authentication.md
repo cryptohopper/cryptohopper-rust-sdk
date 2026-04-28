@@ -78,7 +78,7 @@ let custom = reqwest::Client::builder()
 
 ### `.timeout(...)` and `.max_retries(...)`
 
-`.timeout(Duration)` — per-request total timeout. Applied to the connect + headers phase by reqwest, AND to the body read by the SDK (a wrapper landed in iter 12 to close that gap). Defaults to 30 seconds.
+`.timeout(Duration)` — per-request total timeout. Applied to the connect + headers phase by reqwest, AND wrapped around the body read by the SDK (`reqwest::Client::timeout` only covers up to response headers; the body read needs a separate `tokio::time::timeout` to honour the same deadline). Defaults to 30 seconds.
 
 `.max_retries(u32)` — automatic retries on HTTP 429. Default 3. Set to 0 to disable. See [Rate Limits](Rate-Limits.md) for details.
 
